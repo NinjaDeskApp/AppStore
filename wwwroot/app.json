@@ -1,0 +1,5 @@
+{
+    "displayName": "App Store",
+    "icon": "assets/appstore.webp",
+    "main": "index.html"
+}

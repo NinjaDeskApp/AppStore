@@ -1,0 +1,61 @@
+.left-nav {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    padding: 1rem;
+    background-color: rgba(40, 40, 40, 1);
+    gap: .5rem;
+
+    .search {
+        display: flex;
+        margin-bottom: .5rem;
+        position: relative;
+        justify-content: center;
+
+        svg {
+            position: absolute;
+            left: 0.5rem;
+            top: .5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: gray;
+        }
+
+        input {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: .5rem;
+            border: 1px solid;
+            padding-left: 2.5rem;
+        }
+    }
+
+    .menu {
+        display: flex;
+        flex-direction: column;
+        color: white;
+        gap: .5rem;
+
+        svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: #66aaf8;
+            margin-right: .5rem;
+        }   
+    }
+}
+
+::deep a {
+    display: flex;
+    align-items: center;
+    padding: .35rem .5rem;
+    border-radius: .25rem;
+
+    &:hover {
+        background-color: rgba(55, 55, 55, 1);
+    }
+}
+
+::deep a.active {
+    background-color: rgba(55, 55, 55, 1);
+}
