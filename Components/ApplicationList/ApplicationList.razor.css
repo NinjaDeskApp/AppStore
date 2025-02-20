@@ -1,0 +1,15 @@
+.application-list {
+    display: flex;
+    flex: 1;
+}
+
+::deep .infinite-list .list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+}
+
+::deep .infinite-list .list .app {
+    width: 40rem;
+    height: 20rem;
+}

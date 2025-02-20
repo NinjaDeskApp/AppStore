@@ -1,0 +1,35 @@
+@namespace AppStore.Components
+
+<div class="application-list">
+    <InfiniteList Context="app" LoadMoreDataAsync="LoadMoreApplication">
+        <ItemsTemplate>
+            <div class="app">
+                <div class="display-name">@app.DisplayName</div>
+            </div>
+        </ItemsTemplate>
+    </InfiniteList>
+</div>
+
+@code
+{
+    public record Application(string DisplayName);
+
+    private List<Application> _applications = new ()
+        {
+            new Application("App Store"),
+            new Application("Caculator"),
+            new Application("App Store"),
+            new Application("Caculator"),
+            new Application("App Store"),
+            new Application("Caculator"),
+        };
+
+    private bool _hasMoreData = true;
+
+    private int _count = 0;
+    private async Task<IEnumerable<Application>> LoadMoreApplication()
+    {
+        await Task.Delay(3000);
+        return ++_count > 3 ? _applications.Take(0) : _applications;
+    }
+}

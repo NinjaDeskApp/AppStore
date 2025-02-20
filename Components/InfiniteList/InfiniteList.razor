@@ -1,0 +1,88 @@
+@namespace AppStore.Components
+@inject IJSRuntime JS
+@typeparam T
+
+@if (_hasMoreData && _items.Count() == 0)
+{
+    <div class="infinite-list" style="display: flex; align-items: center; justify-content: center;">
+        <div class="loader">
+            <div /><div /><div />
+        </div>    
+    </div>    
+}
+else
+{
+    <div @ref="_dom" class="infinite-list" @onscroll="OnScroll">
+        <div class="list">
+            @foreach (var item in _items)
+            {
+                @ItemsTemplate(item)
+            }
+        </div>
+
+        <div class="loader" style="@Style">
+            <div /><div /><div />
+        </div>
+    </div>
+}
+
+@code
+{
+    [Parameter]
+    public required Func<Task<IEnumerable<T>>> LoadMoreDataAsync { get; set; }
+
+    [Parameter]
+    public required RenderFragment<T> ItemsTemplate { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        _items.AddRange(await LoadMoreDataAsync());
+        _showLoader = false;
+        _hasMoreData = _items.Count > 0;
+    }
+
+    private List<T> _items = new ();
+
+    [Parameter]
+    public bool HasMoreData { get; set; }
+
+    [Parameter]
+    public EventCallback OnLoadMoreData { get; set; }
+
+    private bool _showLoader = true;
+    private bool _hasMoreData = true;
+
+    private string Style
+        => _showLoader ? "opacity: 1" : "opacity: 0";
+
+    private ElementReference _dom;
+
+    private async void OnScroll(EventArgs e)
+    {
+        if (_hasMoreData && !_showLoader)
+        {
+            var scrollContext = await JS.InvokeAsync<float[]>("getDomScrollContext", _dom);
+            var scrollTop = scrollContext[0];
+            var scrollHeight = scrollContext[1];
+            var clientHeight = scrollContext[2];
+            Console.WriteLine($"OnScroll: {scrollTop},  {clientHeight}, {scrollHeight}");
+            if (scrollTop + clientHeight >= scrollHeight - 5 )
+            {
+                _showLoader = true;
+                StateHasChanged();
+
+                var items = await LoadMoreDataAsync();
+                if (items.Count() > 0)
+                {
+                    _items.AddRange(items);
+                }
+                else
+                {
+                    _hasMoreData = false;
+                }
+                _showLoader = false;
+                StateHasChanged();
+            }
+        }
+    }
+}
