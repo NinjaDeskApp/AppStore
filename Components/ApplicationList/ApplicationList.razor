@@ -1,4 +1,5 @@
 @namespace AppStore.Components
+@inject IApplicationProvider ApplicationProvider
 
 <div class="application-list">
     <InfiniteList Context="app" LoadMoreDataAsync="LoadMoreApplication">
@@ -12,24 +13,13 @@
 
 @code
 {
-    public record Application(string DisplayName);
-
-    private List<Application> _applications = new ()
-        {
-            new Application("App Store"),
-            new Application("Caculator"),
-            new Application("App Store"),
-            new Application("Caculator"),
-            new Application("App Store"),
-            new Application("Caculator"),
-        };
-
-    private bool _hasMoreData = true;
+    private List<string>? _applicationMataDataUris;
 
     private int _count = 0;
+
     private async Task<IEnumerable<Application>> LoadMoreApplication()
     {
         await Task.Delay(3000);
-        return ++_count > 3 ? _applications.Take(0) : _applications;
+        return await ApplicationProvider.GetApplicationsAsync(_count++ * 10, 10);
     }
 }
